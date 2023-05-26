@@ -1,11 +1,10 @@
 import { Router } from "express";
 import ProfessorFiles from "../models/ProfessorFiles.js";
 import mongoose from "mongoose";
-import { uploadFile, getFile, removeDirectory } from "../grid.js";
+import { uploadFile, getFile } from "../grid.js";
 import multer from "multer";
 import path from "path"
-import { removeFile } from "../grid.js";
-const upload = multer({ dest: "backend/uploads/" });
+const upload = multer({ dest: "/tmp/uploads/" });
 const __dirname=path.resolve()
 
 const router = Router();
@@ -14,6 +13,8 @@ router.post("/create", async (req, res) => {
   try {
     // console.log(req.body);
     const { name, email } = req.body.data;
+    console.log("here"
+    )
     // Create if not exists
     var professor = await ProfessorFiles.findOne({ professorEmail: email });
     if (professor) {
@@ -61,7 +62,6 @@ router.post("/uploadFile", upload.single("myFile"), async (req, res) => {
 router.post("/getFiles", async (req, res) => {
     
   try {
-    removeDirectory();
     const  email  = req.body.data.email;
   // console.log(req.body.data.email)
     const professor = await ProfessorFiles.findOne({ professorEmail: email });
@@ -93,6 +93,7 @@ router.post("/getFiles", async (req, res) => {
   }
 });
 router.post("/getAllProfessors", async (req, res) => {
+
   try {
     const professors = await ProfessorFiles.find({});
     if (professors) {
@@ -134,6 +135,10 @@ router.post("/deleteFile", async (req, res) => {
         console.log(err);
         return res.status(500).json(err);
     }
+});
+
+router.post("/deleteProfessor", async (req, res) => {   
+    return res.status(200).json({message:"Professor deleted successfully"})
 });
         
 

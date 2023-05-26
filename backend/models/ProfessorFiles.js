@@ -4,7 +4,6 @@ const professorFilesSchema=new mongoose.Schema({
     professorName:{
         type:String,
         required:true,
-        unique:true
     },
     professorEmail:{
         type:String,

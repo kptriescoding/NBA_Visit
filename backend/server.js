@@ -5,7 +5,7 @@ import dotenv from "dotenv"
 import mongoose from "mongoose"
 import professorRoute from "./routes/professor.js"
 import {DATABASE_URL} from "./env.js"
-import { getFile ,removeDirectory} from "./grid.js"
+import { getFile } from "./grid.js"
 
 
 const __dirname=path.resolve()
@@ -13,6 +13,7 @@ const __dirname=path.resolve()
 dotenv.config({path:__dirname+"/.env"});
 const app=express()
 const url=DATABASE_URL
+// console.log(DATABASE_URL)
 mongoose
     .connect(url,
         { useNewUrlParser: true,
@@ -35,17 +36,16 @@ app.use("/professor",professorRoute)
 
 
 app.use(express.static(path.join(__dirname, "client","build")))
-app.use(express.static(path.join(__dirname, "client","build","files")))
 // app.use("/professor/file/",express.static(path.join(__dirname, "backend","files")))
 app.get("/file", async (req, res) => {
     // removeDirectory()
     let fileName=req.query.fileName
-    res.sendFile(path.join(__dirname,"client","build","files",fileName))
+    res.sendFile(path.join("/tmp","files",fileName))
 });
 
 const PORT = process.env.PORT || 8081;
-// app.get("*",(req,res)=>{
-//     res.sendFile(path.join(__dirname, "client","build","index.html"))
-// })
+app.get("*",(req,res)=>{
+    res.sendFile(path.join(__dirname, "client","build","index.html"))
+})
 
 app.listen(PORT, console.log(`Server started on port ${PORT}`));

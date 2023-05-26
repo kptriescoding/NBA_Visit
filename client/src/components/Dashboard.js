@@ -32,6 +32,10 @@ export default function Dashboard() {
     "ppt",
   ];
 
+  const instance = axios.create({
+    baseURL: "http://localhost:8081", // Replace with your server URL
+  });
+
   // useEffect(() => {
   //   // console.log(user);
   //   // if (!user) {
@@ -82,10 +86,6 @@ export default function Dashboard() {
   //     },
   //   });
   // };
-
-  const instance = axios.create({
-    baseURL: "http://localhost:8081", // Replace with your server URL
-  });
 
   async function handleGetAllProfessors() {
     let arr;
