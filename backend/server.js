@@ -13,7 +13,7 @@ const __dirname=path.resolve()
 dotenv.config({path:__dirname+"/.env"});
 const app=express()
 const url=DATABASE_URL
-console.log(DATABASE_URL)
+// console.log(DATABASE_URL)
 mongoose
     .connect(url,
         { useNewUrlParser: true,
@@ -43,7 +43,7 @@ app.get("/file", async (req, res) => {
     res.sendFile(path.join("/tmp","files",fileName))
 });
 
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT || 8081;
 app.get("*",(req,res)=>{
     res.sendFile(path.join(__dirname, "client","build","index.html"))
 })
