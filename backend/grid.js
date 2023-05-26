@@ -54,6 +54,10 @@ const removeDirectory=()=>{
         fs.mkdirSync("backend/uploads");
         fs.mkdirSync("client/build/files");
 }
+const removeFile=async(id)=>{
+    let file=await gfs.findById(id)
+    await file.unlink()
+}
 
 export {uploadFile,getFile,removeDirectory}
 
