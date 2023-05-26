@@ -41,9 +41,9 @@ export default function Dashboard() {
   //   // console.log(documents);
 
   // }, [user]);
-useEffect(() => {
-  handleGetAllProfessors();
-},[]);
+  useEffect(() => {
+    handleGetAllProfessors();
+  }, []);
 
   const handleSignOut = async () => {
     await logout();
@@ -119,7 +119,7 @@ useEffect(() => {
     // Add any additional options you require, such as watermark, print, etc.
   };
 
-  async function handleProfessorChanged(event,professor) {
+  async function handleProfessorChanged(event, professor) {
     event.preventDefault();
     try {
       // console.log(professor);
@@ -146,25 +146,22 @@ useEffect(() => {
     // });
   }
 
-  const getFiles =async(professorEmail) => {
+  const getFiles = async (professorEmail) => {
     console.log(professorEmail);
     try {
       const allDocuments = await instance.post("/professor/getFiles/", {
         data: {
-          email:professorEmail,
+          email: professorEmail,
         },
       });
       console.log(allDocuments.data.files);
 
       // console.log(allDocuments.data.files);
 
-        // let  arr = allDocuments.data.files;
+      let arr = allDocuments.data.files;
       // let url = window.location.origin + arr.url;
       // console.log(arr);
-      // for (let i = 0; i < arr.length; i++) {
-      //   arr[i].url = window.location.origin + arr.url;
-      // }
-      // setDocuments(arr);
+      setDocuments(arr);
     } catch (err) {
       console.log(err);
     }
@@ -234,8 +231,10 @@ useEffect(() => {
             professors.map((professor) => {
               return (
                 <button
-                  className="card  py-2 focus:bg-blue-200 border-b-2"
-                  onClickCapture={(event)=>handleProfessorChanged(event,professor)}
+                  className="card  py-2 focus:bg-blue-200 border-b-2 w-full items-center text-gray-700 "
+                  onClickCapture={(event) =>
+                    handleProfessorChanged(event, professor)
+                  }
                 >
                   {professor.professorName}
                 </button>
@@ -278,12 +277,18 @@ useEffect(() => {
           </div>
           <div>
             {/* Documents */}
-            {!documents &&
-              documents.map((document ) => {
+            {documents &&
+              documents.map((document) => {
                 // console.log(document  )
                 return (
-                  <div className="card text-gray-800   py-4 border-b-2 flex flex-col">
-                    <p>{document.fileName}</p>
+                  <div className="card text-gray-800   py-2 border-b-2 flex flex-col">
+                    <div className="flex justify-evenly">
+                      <p className=" flex-grow">{document.fileName}</p>
+                      <a href={document.url} className=" p-1 px-1.5 rounded-full hover:bg-red-100" download={document.fileName} target="__blank">
+                        <span className="material-symbols-outlined">download</span>
+                      </a>
+                    </div>
+
                     {!document && (
                       <div className=" h-36 flex justify-center">
                         <FileViewer

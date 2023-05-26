@@ -70,12 +70,15 @@ router.post("/getFiles", async (req, res) => {
       let fileLoc
       for (let i = 0; i < professor.files.length; i++) {
         fileLoc=await getFile(professor.files[i].fileId)
+        
         reqFile ={
             fileName: professor.files[i].fileName,
-            url:"http://localhost:8081/file?fileName="+fileLoc
+            url:("http://localhost:8081/file?fileName="+fileLoc)
         }
+       
         reqFiles.push(reqFile);
       }
+    
     
       return res.status(200).json({ files: reqFiles });
     } else {
