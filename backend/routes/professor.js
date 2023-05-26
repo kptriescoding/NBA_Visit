@@ -1,10 +1,10 @@
 import { Router } from "express";
 import ProfessorFiles from "../models/ProfessorFiles.js";
 import mongoose from "mongoose";
-import { uploadFile, getFile, removeDirectory } from "../grid.js";
+import { uploadFile, getFile } from "../grid.js";
 import multer from "multer";
 import path from "path"
-const upload = multer({ dest: "backend/uploads/" });
+const upload = multer({ dest: "/tmp/uploads/" });
 const __dirname=path.resolve()
 
 const router = Router();
@@ -60,7 +60,6 @@ router.post("/uploadFile", upload.single("myFile"), async (req, res) => {
 router.post("/getFiles", async (req, res) => {
     
   try {
-    removeDirectory();
     const  email  = req.body.data.email;
   // console.log(req.body.data.email)
     const professor = await ProfessorFiles.findOne({ professorEmail: email });
@@ -89,6 +88,7 @@ router.post("/getFiles", async (req, res) => {
   }
 });
 router.post("/getAllProfessors", async (req, res) => {
+    
   try {
     const professors = await ProfessorFiles.find({});
     if (professors) {

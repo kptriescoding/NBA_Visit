@@ -37,29 +37,32 @@ const getFile=async(id)=>{
     const readStream=await file.read()
 
     var fileName=id+file.filename
-    const writeStream=createWriteStream("client/build/files/"+fileName)
+    if (!fs.existsSync("/tmp/uploads")){
+                    fs.mkdirSync("/tmp/uploads",{ recursive: true, force: true });
+                }
+    const writeStream=createWriteStream("/tmp/files/"+fileName)
     await readStream.pipe(writeStream)
 
 
     return fileName
 }
-const removeDirectory=()=>{
-        if (fs.existsSync("backend/uploads")){
-            fs.rmSync("backend/uploads",{ recursive: true, force: true });
-        }
-        if (fs.existsSync("client/build/files")){
-                fs.rmSync("client/build/files",{ recursive: true, force: true });
-            }
+// const removeDirectory=()=>{
+//         if (fs.existsSync("backend/uploads")){
+//             fs.rmSync("backend/uploads",{ recursive: true, force: true });
+//         }
+//         if (fs.existsSync("client/build/files")){
+//                 fs.rmSync("client/build/files",{ recursive: true, force: true });
+//             }
         
-        fs.mkdirSync("backend/uploads");
-        fs.mkdirSync("client/build/files");
-}
+//         fs.mkdirSync("backend/uploads");
+//         fs.mkdirSync("client/build/files");
+// }
 const removeFile=async(id)=>{
     let file=await gfs.findById(id)
     await file.unlink()
 }
 
-export {uploadFile,getFile,removeDirectory}
+export {uploadFile,getFile}
 
 // const readStream=createReadStream(".gitignore")
 
