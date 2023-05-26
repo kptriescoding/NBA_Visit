@@ -3,7 +3,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
-import { logout ,signInWithGoogle} from "../firebase";
+import { logout, signInWithGoogle } from "../firebase";
 import FileViewer from "react-file-viewer";
 import { doc } from "firebase/firestore";
 import { FileUploader } from "react-drag-drop-files";
@@ -52,7 +52,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     getFiles(currentProfessor);
-  },[currentProfessor])
+  }, [currentProfessor]);
   const handleSignOut = async () => {
     await logout();
     console.log("signed out");
@@ -234,7 +234,14 @@ export default function Dashboard() {
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
-                <img src={user?user.photoURL:"dummy"} />
+                <img
+                  src={
+                    user
+                      ? user.photoURL
+                      : "https://st3.depositphotos.com/1767687/17621/v/600/depositphotos_176214104-stock-illustration-default-avatar-profile-icon.jpg"
+                  }
+                  alt=""
+                />
               </div>
             </label>
             <ul
@@ -255,7 +262,9 @@ export default function Dashboard() {
 
       <div className="flex justify-between self-center  w-4/5 ">
         <div className="w-1/5 mt-1">
-          <h1 className=" text-xl border-2 border-gray-400 py-2 text-white bg-gray-600 ">Professors</h1>
+          <h1 className=" text-xl border-2 border-gray-400 py-2 text-white bg-gray-600 ">
+            Professors
+          </h1>
           {professors &&
             professors.map((professor) => {
               return (
@@ -306,6 +315,11 @@ export default function Dashboard() {
               </button>
             </div>
           )}
+          {!user && (
+            <div className=" w-full ">
+              <p className=" text-gray-600 text-xl py-1 border-b-2 bg-orange-100">All Files</p>
+            </div>
+          )}
           <div>
             {/* Documents */}
             {documents &&
@@ -353,15 +367,16 @@ export default function Dashboard() {
                 );
               })}
             <div className="self-center  w-3/5 h-24  ">
-              {selectedFile && (
+              {/* {selectedFile && (
                 <div className=" h-36 flex justify-center">
                   <FileViewer
                     fileType={selectedFile.name.split(".").pop().toLowerCase()}
                     filePath={URL.createObjectURL(selectedFile)}
                     {...fileOptions}
                   />
+                <embed src={selectedFile.url}/> 
                 </div>
-              )}
+              )} */}
             </div>
           </div>
         </div>
