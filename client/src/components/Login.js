@@ -9,7 +9,6 @@ import axios from "axios";
 export default function Login() {
   const [user, loading, error] = useAuthState(auth);
 
-  const emailRegex = /^((?!\.[a-z]{2}[0-9]{2})[a-zA-Z0-9_.+-]+)@rvce\.edu\.in$/;
   const instance = axios.create({
     baseURL: "http://localhost:8081", // Replace with your server URL
   });

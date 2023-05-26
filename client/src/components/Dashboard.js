@@ -255,7 +255,7 @@ export default function Dashboard() {
 
       <div className="flex justify-between self-center  w-4/5 ">
         <div className="w-1/5 mt-1">
-          <h1 className=" text-xl border-2 border-gray-400 py-2">Professors</h1>
+          <h1 className=" text-xl border-2 border-gray-400 py-2 text-white bg-gray-600 ">Professors</h1>
           {professors &&
             professors.map((professor) => {
               return (
