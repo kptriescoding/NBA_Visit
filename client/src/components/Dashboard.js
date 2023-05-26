@@ -48,7 +48,8 @@ export default function Dashboard() {
       return arr;
     });
   }
-  async function handleProfessorChanged() {
+  async function handleProfessorChanged(event) {
+    event.preventDefault();
     let arr;
     try {
       const allDocuments = await instance.post("/professor/getFiles", {
@@ -123,7 +124,7 @@ export default function Dashboard() {
               className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-white rounded-box w-52"
             >
               <li>
-                <a onClickCa={()=>logout()}>Logout</a>
+                <a onClick={()=>logout()}>Logout</a>
               </li>
             </ul>
           </div>

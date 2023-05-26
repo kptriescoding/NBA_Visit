@@ -29,27 +29,52 @@ const uploadFile=async(file)=>{
     return uploadedFile
 }
 
-const getFile=async(id,res)=>{
+const getFile=async(id)=>{
     let file=await gfs.findById(id)
 
-    // let writeStream=createWriteStream(file.filename)
-    // console.log(file)
-    // Convert file to buffer and send it to frontend
-    console.log(file.contentType)
-    const readStream=await file.read()
+    const readStream=file.read()
 
-    // Convert readStream to blob
-    const chunks = [];   
-    for await (const chunk of readStream) {
-        chunks.push(chunk);
+    if(!process.env.PORT){
+    // CReate a directory if not exists
+    if (!fs.existsSync("client/public/files")){
+        fs.mkdirSync("client/public/files");
     }
-    print(chunks)
-    const buffer = Buffer.concat(chunks);
-    console.log(buffer)
-    return res
+    const writeStream=createWriteStream("client/public/files/"+id+file.filename)
+    readStream.pipe(writeStream)
+    }
+    else{
+        if (!fs.existsSync("client/build/files")){
+            fs.mkdirSync("client/build/files");
+        }
+        const writeStream=createWriteStream("client/build/files/"+id+file.filename)
+    readStream.pipe(writeStream)
+    }
+    // console.log(buffer)
+
+    // const fileUrl="client"
+    const resFile={
+        url:"/files/"+id+file.filename,
+        fileName:file.filename,
+    }
+    return resFile
+}
+const removeDirectory=()=>{
+    if(!process.env.PORT){
+        // CReate a directory if not exists
+        if (fs.existsSync("client/public/files")){
+            fs.rmSync("client/public/files",{ recursive: true, force: true });
+        }
+        }
+        else{
+            if (fs.existsSync("client/build/files")){
+                fs.rmSync("client/build/files",{ recursive: true, force: true });
+            }
+        }
+        fs.rmSync("backend/uploads",{ recursive: true, force: true });
+        fs.mkdirSync("backend/uploads");
 }
 
-export {uploadFile,getFile}
+export {uploadFile,getFile,removeDirectory}
 
 // const readStream=createReadStream(".gitignore")
 

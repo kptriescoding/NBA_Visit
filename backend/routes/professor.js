@@ -1,7 +1,7 @@
 import { Router } from "express"
 import ProfessorFiles from "../models/ProfessorFiles.js"
 import mongoose from "mongoose"
-import {uploadFile,getFile} from "../grid.js"
+import {uploadFile,getFile,removeDirectory} from "../grid.js"
 import multer from "multer"
 
 const upload=multer({dest:'backend/uploads/'})
@@ -61,15 +61,17 @@ router.post("/uploadFile",upload.single("myFile"),async(req,res)=>{
 
 router.post("/getFiles",async(req,res)=>{
     try{
+        removeDirectory()
         const {email}=req.body.data
         const professor=await ProfessorFiles.findOne({professorEmail:email})
         if(professor){
-            professor.reqFiles=[]
+            let reqFiles=[]
             let reqFile
-           professor.files.forEach(async (file,index)=>{
-                res=await getFile(file.fileId,res)
-            })
-            return res.status(200).json(professor)
+        for(let i=0;i<professor.files.length;i++){
+            reqFile=await getFile(professor.files[i].fileId)
+            reqFiles.push(reqFile)
+        }
+            return res.status(200).json({files:reqFiles})
         }
         else{
             return res.status(404).json({error:"Professor not found"})
