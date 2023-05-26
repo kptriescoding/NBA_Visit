@@ -5,6 +5,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
 import { logout } from "../firebase";
 import FileViewer from "react-file-viewer";
+import { doc } from "firebase/firestore";
 
 export default function Dashboard() {
   const [user, loading, error] = useAuthState(auth);
@@ -107,13 +108,43 @@ export default function Dashboard() {
           email: professor.professorEmail,
         },
       });
-      arr = allDocuments.data.files;
+
+      console.log(allDocuments.data.files);
+      arr = allDocuments.data.files[0];
+      let url=window.location.origin+arr.url
+      // USe this url to access the file
+      console.log(url);
+
+
+
     } catch (err) {
       console.log(err);
     }
-    setDocuments(() => {
-      return arr;
-    });
+    // setDocuments(() => {
+    //   // return arr;
+    // });
+  }
+  const uploadFile=async()=>{
+    var file = document.getElementById("myFile").files[0];
+    var formData = new FormData();
+    formData.append("myFile", file);
+    formData.append("email",user.email);
+      // ArrayBuffer to blob
+      // fileData=new Blob([new Uint8Array(fileData)],{type:file.type});
+      // let data={
+      //   email:user.email,
+      //   fileName:file.name,
+      //   fileStream:fileData,
+      //   fileType:file.type
+      // }
+      try{
+        const uploadFile=await instance.post("/professor/uploadFile/",formData)
+        console.log(uploadFile);
+      }
+      catch(err){
+        console.log(err);
+      }
+    
   }
 
   return (
@@ -123,6 +154,7 @@ export default function Dashboard() {
           <a className="btn btn-ghost normal-case text-xl">
             RV College Of Engineering
           </a>
+          
         </div>
         <div className="flex-none gap-2  ">
           <div className="form-control ">
@@ -143,7 +175,7 @@ export default function Dashboard() {
               className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-white rounded-box w-52"
             >
               <li>
-                <a>Logout</a>
+                <a onClick={()=>logout()}>Logout</a>
               </li>
             </ul>
           </div>
@@ -207,6 +239,8 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+      <input type="file" id="myFile" name="filename"/>
+  <input type="submit" onClickCapture={uploadFile}></input>
     </div>
   );
 }

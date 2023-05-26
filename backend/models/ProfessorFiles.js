@@ -12,12 +12,12 @@ const professorFilesSchema=new mongoose.Schema({
         unique:true
     },
     files:[{
-        fileName:{
-            type:String
+        fileId:{
+            type:String,
         },
-        data:{
-            type:Buffer
-        }
+        fileName:{
+            type:String,
+        },
         
     }]
 

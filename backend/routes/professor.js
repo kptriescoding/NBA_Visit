@@ -1,8 +1,13 @@
 import { Router } from "express"
 import ProfessorFiles from "../models/ProfessorFiles.js"
+import mongoose from "mongoose"
+import {uploadFile,getFile,removeDirectory} from "../grid.js"
+import multer from "multer"
 
+const upload=multer({dest:'backend/uploads/'})
 
 const router=Router()
+
 
 router.post("/create",async(req,res)=>{
     try{
@@ -25,28 +30,29 @@ router.post("/create",async(req,res)=>{
     }
 }
 )
-router.post("/addFile",async(req,res)=>{ 
-    try{    
-        // const {name,email,fileName,fileData}=req.body.data
+router.post("/uploadFile",upload.single("myFile"),async(req,res)=>{ 
+    try{
+        const file=req.file
+
+        const {email}=req.body
         // Access multipart form data
+        // console.log("Here")
+        // console.log(file)
         
-        // console.log(req.file);
-        console.log(req.body.data)
-        const f = req.body.data.file;
-        console.log(f.get("file"));
-        // console.log(professorEmail)
-        // const professor=await ProfessorFiles.findOne({professorEmail:professorEmail})
-        // if(professor){
-        //     professor.files.push({
-        //         fileName:fileName,
-        //         data:fileData
-        //     })
-        //     await professor.save()
-        //     return res.json(professor)
-        // }
-        // else{
-        //     return res.status(404).json({error:"Professor not found"})
-        // }
+        const professor=await ProfessorFiles.findOne({professorEmail:email})
+        if(professor){
+            let {id}=await uploadFile(file)
+            // console.log(id)
+            professor.files.push({
+                fileName:file.originalname,
+                fileId:id
+            })
+            await professor.save()
+            return res.json(professor)
+        }
+        else{
+            return res.status(404).json({error:"Professor not found"})
+        }
     }catch(err){
         console.log(err)
         return res.status(500).json(err)
@@ -55,12 +61,17 @@ router.post("/addFile",async(req,res)=>{
 
 router.post("/getFiles",async(req,res)=>{
     try{
-        console.log(req.body)
-        const email=req.body.data.email
-   
+        removeDirectory()
+        const {email}=req.body.data
         const professor=await ProfessorFiles.findOne({professorEmail:email})
         if(professor){
-            return res.json(professor)
+            let reqFiles=[]
+            let reqFile
+        for(let i=0;i<professor.files.length;i++){
+            reqFile=await getFile(professor.files[i].fileId)
+            reqFiles.push(reqFile)
+        }
+            return res.status(200).json({files:reqFiles})
         }
         else{
             return res.status(404).json({error:"Professor not found"})
@@ -74,7 +85,14 @@ router.post("/getAllProfessors",async(req,res)=>{
     try{
         const professors=await ProfessorFiles.find({})
         if(professors){
-            return res.json(professors)
+
+            var resProf=[]
+            professors.forEach(prof=>{
+                resProf.push({
+                professorName:prof.professorName,
+                    professorEmail:prof.professorEmail
+                })})
+            return res.json(resProf)
         }
         else{
             return res.status(404).json({error:"No professors found"})
