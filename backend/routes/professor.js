@@ -1,7 +1,7 @@
 import { Router } from "express";
 import ProfessorFiles from "../models/ProfessorFiles.js";
 import mongoose from "mongoose";
-import { uploadFile, getFile } from "../grid.js";
+import { uploadFile, getFile,removeFile } from "../grid.js";
 import multer from "multer";
 import path from "path"
 const upload = multer({ dest: "/tmp/uploads/" });

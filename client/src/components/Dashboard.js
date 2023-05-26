@@ -160,7 +160,6 @@ export default function Dashboard() {
       },
     });
     window.location.reload();
-    getFiles(currentProfessor);
   };
 
   const getFiles = async (professorEmail) => {
