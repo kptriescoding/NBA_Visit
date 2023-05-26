@@ -6,6 +6,7 @@ import { auth } from "../firebase";
 import { logout } from "../firebase";
 import FileViewer from "react-file-viewer";
 import { doc } from "firebase/firestore";
+import { FileUploader } from "react-drag-drop-files";
 
 export default function Dashboard() {
   const [user, loading, error] = useAuthState(auth);
@@ -15,15 +16,34 @@ export default function Dashboard() {
   const [currentProfessor, setCurrentProfessor] = useState("");
   const [documents, setDocuments] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
+  const fileTypes = [
+    "JPG",
+    "JPEG",
+    "PNG",
+    "GIF",
+    "pptx",
+    "docs",
+    "pdf",
+    "csv",
+    "xls",
+    "xlsx",
+    "doc",
+    "docx",
+    "ppt",
+  ];
 
-  useEffect(() => {
-    // console.log(user);
-    if (!user) {
-      window.location.href = "/";
-      if (loading) return;
-    }
-    handleGetAllProfessors();
-  }, [user]);
+  // useEffect(() => {
+  //   // console.log(user);
+  //   // if (!user) {
+  //   //   window.location.href = "/";
+  //   //   if (loading) return;
+  //   // }
+  //   // console.log(documents);
+
+  // }, [user]);
+useEffect(() => {
+  handleGetAllProfessors();
+},[]);
 
   const handleSignOut = async () => {
     await logout();
@@ -31,32 +51,33 @@ export default function Dashboard() {
     console.log(user);
   };
 
-  const handleFileChange = (event) => {
+  const handleFileChange = (file1) => {
     // event.preventDefault();
-    setSelectedFile(event.target.files[0]);
-    const file = event.target.files[0];
+    setSelectedFile(file1);
+    // console.log(selectedFile);
+    const file = file1;
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setFileData(reader.result);
       };
-      console.log(fileData);
+      // console.log(fileData);
       reader.readAsDataURL(file);
     }
   };
 
-  const handleFileUpload = async () => {
-    console.log(selectedFile);
-    const formData = new FormData();
-    formData.append("file", selectedFile, selectedFile.name);
+  // const handleFileUpload = async () => {
+  //   console.log(selectedFile);
+  //   const formData = new FormData();
+  //   formData.append("file", selectedFile, selectedFile.name);
 
-    instance.post("/professor/addFile", {
-      data: {
-        file: formData,
-        professorEmail: user.email,
-      },
-    });
-  };
+  //   instance.post("/professor/addFile", {
+  //     data: {
+  //       file: formData,
+  //       professorEmail: user.email,
+  //     },
+  //   });
+  // };
 
   const instance = axios.create({
     baseURL: "http://localhost:8081", // Replace with your server URL
@@ -98,25 +119,25 @@ export default function Dashboard() {
     // Add any additional options you require, such as watermark, print, etc.
   };
 
-  async function handleProfessorChanged(professor) {
-    let arr;
+  async function handleProfessorChanged(event,professor) {
+    event.preventDefault();
     try {
-      // console.log("here" + professor);
+      // console.log(professor);
+
       setCurrentProfessor(professor.professorEmail);
-      const allDocuments = await instance.post("/professor/getFiles/", {
-        data: {
-          email: professor.professorEmail,
-        },
-      });
+      await getFiles(professor.professorEmail);
+      // const allDocuments = await instance.post("/professor/getFiles/", {
+      //   data: {
+      //     email: professor.professorEmail,
+      //   },
+      // });
 
-      console.log(allDocuments.data.files);
-      arr = allDocuments.data.files[0];
-      let url=window.location.origin+arr.url
+      // console.log(allDocuments.data.files);
+      // arr = allDocuments.data.files;
+      // let url = window.location.origin + arr.url;
+      // console.log(arr);
       // USe this url to access the file
-      console.log(url);
-
-
-
+      // setDocuments(allDocuments.data.files);
     } catch (err) {
       console.log(err);
     }
@@ -124,28 +145,51 @@ export default function Dashboard() {
     //   // return arr;
     // });
   }
-  const uploadFile=async()=>{
-    var file = document.getElementById("myFile").files[0];
+
+  const getFiles = async (professorEmail) => {
+    try {
+      const allDocuments = await instance.post("/professor/getFiles/", {
+        data: {
+          email:professorEmail,
+        },
+      });
+      // console.log(allDocuments.data.files);
+
+        // let  arr = allDocuments.data.files;
+      // let url = window.location.origin + arr.url;
+      // console.log(arr);
+      // for (let i = 0; i < arr.length; i++) {
+      //   arr[i].url = window.location.origin + arr.url;
+      // }
+      // setDocuments(arr);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const uploadFile = async () => {
+    console.log("uploading");
+    var file = selectedFile;
     var formData = new FormData();
     formData.append("myFile", file);
-    formData.append("email",user.email);
-      // ArrayBuffer to blob
-      // fileData=new Blob([new Uint8Array(fileData)],{type:file.type});
-      // let data={
-      //   email:user.email,
-      //   fileName:file.name,
-      //   fileStream:fileData,
-      //   fileType:file.type
-      // }
-      try{
-        const uploadFile=await instance.post("/professor/uploadFile/",formData)
-        console.log(uploadFile);
-      }
-      catch(err){
-        console.log(err);
-      }
-    
-  }
+    formData.append("email", user.email);
+    // ArrayBuffer to blob
+    // fileData=new Blob([new Uint8Array(fileData)],{type:file.type});
+    // let data={
+    //   email:user.email,
+    //   fileName:file.name,
+    //   fileStream:fileData,
+    //   fileType:file.type
+    // }
+    try {
+      const uploadFile = await instance.post(
+        "/professor/uploadFile/",
+        formData
+      );
+      console.log(uploadFile);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className=" w-full bg-primary-bg h-screen flex flex-col gap-4">
@@ -154,7 +198,6 @@ export default function Dashboard() {
           <a className="btn btn-ghost normal-case text-xl">
             RV College Of Engineering
           </a>
-          
         </div>
         <div className="flex-none gap-2  ">
           <div className="form-control ">
@@ -175,7 +218,7 @@ export default function Dashboard() {
               className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-white rounded-box w-52"
             >
               <li>
-                <a onClick={()=>logout()}>Logout</a>
+                <a onClick={() => logout()}>Logout</a>
               </li>
             </ul>
           </div>
@@ -185,14 +228,11 @@ export default function Dashboard() {
       <div className="flex justify-between self-center  w-4/5 ">
         <div className="w-1/5 mt-4">
           {professors &&
-            professors.map((professor, index) => {
+            professors.map((professor) => {
               return (
                 <div
-                  className={`card  py-2 focus:bg-blue-200 border-b-2 ${
-                    currentProfessor &&
-                    currentProfessor == professor.professorEmail
-                  }?bg-blue-200:"" `}
-                  onClick={() => handleProfessorChanged(professor)}
+                  className="card  py-2 focus:bg-blue-200 border-b-2"
+                  onClickCapture={(event)=>handleProfessorChanged(event,professor)}
                 >
                   {professor.professorName}
                 </div>
@@ -200,13 +240,31 @@ export default function Dashboard() {
             })}
         </div>
         {/* documents section */}
-        <div className=" border-2 shadow-lg  flex-grow rounded-xl">
-          <div className=" flex justify-end">
+        <div className=" border-2 shadow-lg  flex-grow rounded-xl border-gray-300">
+          <div className=" flex justify-end bg-orange-50 rounded-t  border-b-2 ">
             {/* Upload Option */}
-            <input type="file" onChange={handleFileChange} />
+            {/* <input
+              type="file"
+              onChange={handleFileChange}
+              id="myFile"
+              name="filename"
+            /> */}
+            <FileUploader
+              handleChange={handleFileChange}
+              name="filename"
+              id="file"
+              label="Select or Drop a file"
+              className=" w-full my-1  flex-grow"
+              style={{
+                width: "100%",
+                margin: "1px",
+              }}
+              types={fileTypes}
+            />
+
             <button
-              className=" flex justify-center items-center py-2.5 pr-16  hover:bg-blue-200 text-black"
-              onClick={handleFileUpload}
+              className=" flex justify-center items-center py-2.5 pr-8 pl-8 rounded-e-lg  bg-red-50 hover:bg-orange-100 text-black"
+              onClickCapture={uploadFile}
             >
               {/* <span>Upload File</span>  */}
               <span className="material-symbols-outlined rounded-full px-1">
@@ -217,11 +275,21 @@ export default function Dashboard() {
           </div>
           <div>
             {/* Documents */}
-            {documents &&
-              documents.map((document, index) => {
+            {!documents &&
+              documents.map((document ) => {
+                // console.log(document  )
                 return (
                   <div className="card text-gray-800   py-4 border-b-2 flex flex-col">
                     <p>{document.fileName}</p>
+                    {!document && (
+                      <div className=" h-36 flex justify-center">
+                        <FileViewer
+                          fileType={document.url.split(".").pop().toLowerCase()}
+                          filePath={document.url}
+                          {...fileOptions}
+                        />
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -239,8 +307,6 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-      <input type="file" id="myFile" name="filename"/>
-  <input type="submit" onClickCapture={uploadFile}></input>
     </div>
   );
 }
