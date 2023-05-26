@@ -16,7 +16,7 @@ export default function Login() {
 
   useEffect(() => {
     if (user) {
-      console.log("lgged in");
+      console.log("logged in");
       instance.post("/professor/create", {
         data: {
           email: user.email,
@@ -42,11 +42,11 @@ export default function Login() {
 
   return (
     <div>
-      {!user ? (
+      {/* {!user ? (
         <GoogleButton onClick={handleSignIn}>Sign In with Google</GoogleButton>
-      ) : (
+      ) : ( */}
         <Dashboard />
-      )}
+      {/* // )} */}
     </div>
   );
 }

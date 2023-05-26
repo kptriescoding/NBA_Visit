@@ -55,11 +55,15 @@ const removeDirectory=()=>{
         fs.mkdirSync("client/build/files");
 }
 const removeFile=async(id)=>{
-    let file=await gfs.findById(id)
-    await file.unlink()
+    // let file= gfs.unlink(id,(err,unlinked)=>{
+    //     if(err) throw err;
+    // })
+    // gfs.unlink(id)
+    await gfs.deleteOne({ _id: id }).exec();
+        //  gfs.unlink(id)  
 }
 
-export {uploadFile,getFile,removeDirectory}
+export {uploadFile,getFile,removeDirectory,removeFile}
 
 // const readStream=createReadStream(".gitignore")
 

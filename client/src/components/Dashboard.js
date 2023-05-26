@@ -3,7 +3,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
-import { logout } from "../firebase";
+import { logout ,signInWithGoogle} from "../firebase";
 import FileViewer from "react-file-viewer";
 import { doc } from "firebase/firestore";
 import { FileUploader } from "react-drag-drop-files";
@@ -41,10 +41,14 @@ export default function Dashboard() {
   //   // console.log(documents);
 
   // }, [user]);
+
   useEffect(() => {
     handleGetAllProfessors();
   }, []);
 
+  useEffect(() => {
+    getFiles(currentProfessor);
+  },[currentProfessor])
   const handleSignOut = async () => {
     await logout();
     console.log("signed out");
@@ -146,6 +150,19 @@ export default function Dashboard() {
     // });
   }
 
+  const handleFileDelete = async (document) => {
+    if (!window.confirm("Are you sure you want to delete this file?")) return;
+
+    await instance.post("/professor/deleteFile", {
+      data: {
+        fileId: document.fileId,
+        email: user.email,
+      },
+    });
+    window.location.reload();
+    getFiles(currentProfessor);
+  };
+
   const getFiles = async (professorEmail) => {
     console.log(professorEmail);
     try {
@@ -185,15 +202,22 @@ export default function Dashboard() {
         "/professor/uploadFile/",
         formData
       );
-      console.log(uploadFile);
+      // console.log(uploadFile);
+      window.location.reload();
+      getFiles(currentProfessor);
     } catch (err) {
       console.log(err);
     }
   };
 
   return (
-    <div className=" w-full bg-primary-bg h-screen flex flex-col gap-4">
-      <div className="navbar bg-primaryfocus-bg border-b-2 border-x-blue-950 ">
+    <div className=" w-full bg-primary-bg h-screen flex flex-col gap-4 ">
+      <div className="navbar bg-primaryfocus-bg border-b-2 border-x-blue-950 relative">
+        <img
+          src="download-removebg-preview.png"
+          alt="RV Logo"
+          className=" w-16"
+        ></img>
         <div className="flex-1">
           <a className="btn btn-ghost normal-case text-xl">
             RV College Of Engineering
@@ -210,7 +234,7 @@ export default function Dashboard() {
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
-                <img src={user.photoURL} />
+                <img src={user?user.photoURL:"dummy"} />
               </div>
             </label>
             <ul
@@ -218,7 +242,11 @@ export default function Dashboard() {
               className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-white rounded-box w-52"
             >
               <li>
-                <a onClick={() => logout()}>Logout</a>
+                {user ? (
+                  <a onClick={() => logout()}>Logout</a>
+                ) : (
+                  <a onClick={() => signInWithGoogle()}>Login</a>
+                )}
               </li>
             </ul>
           </div>
@@ -226,12 +254,13 @@ export default function Dashboard() {
       </div>
 
       <div className="flex justify-between self-center  w-4/5 ">
-        <div className="w-1/5 mt-4">
+        <div className="w-1/5 mt-1">
+          <h1 className=" text-xl border-2 border-gray-400 py-2">Professors</h1>
           {professors &&
             professors.map((professor) => {
               return (
                 <button
-                  className="card  py-2 focus:bg-blue-200 border-b-2 w-full items-center text-gray-700 "
+                  className="card  py-2 focus:bg-primaryfocus-bg border-b-2 w-full items-center text-gray-700 "
                   onClickCapture={(event) =>
                     handleProfessorChanged(event, professor)
                   }
@@ -243,50 +272,72 @@ export default function Dashboard() {
         </div>
         {/* documents section */}
         <div className=" border-2 shadow-lg  flex-grow rounded-xl border-gray-300">
-          <div className=" flex justify-end bg-orange-50 rounded-t  border-b-2 ">
-            {/* Upload Option */}
-            {/* <input
+          {user && (
+            <div className=" flex justify-end bg-orange-50 rounded-t  border-b-2 ">
+              {/* Upload Option */}
+              {/* <input
               type="file"
               onChange={handleFileChange}
               id="myFile"
               name="filename"
             /> */}
-            <FileUploader
-              handleChange={handleFileChange}
-              name="filename"
-              id="file"
-              label="Select or Drop a file"
-              className=" w-full my-1  flex-grow"
-              style={{
-                width: "100%",
-                margin: "1px",
-              }}
-              types={fileTypes}
-            />
+              <FileUploader
+                handleChange={handleFileChange}
+                name="filename"
+                id="file"
+                label="Select or Drop a file"
+                className=" w-full my-1  flex-grow"
+                style={{
+                  width: "100%",
+                  margin: "1px",
+                }}
+                types={fileTypes}
+              />
 
-            <button
-              className=" flex justify-center items-center py-2.5 pr-8 pl-8 rounded-e-lg  bg-red-50 hover:bg-orange-100 text-black"
-              onClickCapture={uploadFile}
-            >
-              {/* <span>Upload File</span>  */}
-              <span className="material-symbols-outlined rounded-full px-1">
-                upload_file
-              </span>
-              <span>Upload File</span>
-            </button>
-          </div>
+              <button
+                className=" flex justify-center items-center py-2.5 pr-8 pl-8 rounded-e-lg  bg-red-50 hover:bg-orange-100 text-black"
+                onClickCapture={uploadFile}
+              >
+                {/* <span>Upload File</span>  */}
+                <span className="material-symbols-outlined rounded-full px-1">
+                  upload_file
+                </span>
+                <span>Upload File</span>
+              </button>
+            </div>
+          )}
           <div>
             {/* Documents */}
             {documents &&
               documents.map((document) => {
                 // console.log(document  )
                 return (
-                  <div className="card text-gray-800   py-2 border-b-2 flex flex-col">
-                    <div className="flex justify-evenly">
+                  <div className="card text-gray-800    border-b-2 flex flex-col">
+                    <div className="flex justify-evenly hover:bg-primaryfocus-bg py-1.5">
                       <p className=" flex-grow">{document.fileName}</p>
-                      <a href={document.url} className=" p-1 px-1.5 rounded-full hover:bg-red-100" download={document.fileName} target="__blank">
-                        <span className="material-symbols-outlined">download</span>
+
+                      <a
+                        href={document.url}
+                        className=" p-1 px-1.5 rounded-full hover:bg-red-100 mx-2"
+                        download={document.fileName}
+                        target="__blank"
+                      >
+                        <span className="material-symbols-outlined">
+                          download
+                        </span>
                       </a>
+                      {user && user.email === currentProfessor && (
+                        <>
+                          <button
+                            className="rounded-full mx-2 px-1.5 py-1 "
+                            onClickCapture={() => handleFileDelete(document)}
+                          >
+                            <span className="material-symbols-outlined hover:text-red-600">
+                              delete
+                            </span>
+                          </button>
+                        </>
+                      )}
                     </div>
 
                     {!document && (

@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { uploadFile, getFile, removeDirectory } from "../grid.js";
 import multer from "multer";
 import path from "path"
+import { removeFile } from "../grid.js";
 const upload = multer({ dest: "backend/uploads/" });
 const __dirname=path.resolve()
 
