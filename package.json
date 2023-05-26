@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "start": "node backend/servers.js",
-    "server": "nodemon backend/servers.js",
+    "start": "node backend/server.js",
+    "server": "nodemon backend/server.js",
     "client": "npm --prefix client/ start",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "heroku-postbuild": "npm install --only=dev && cd backend && npm install --only=dev && cd ../client && npm install --only=dev && npm install && npm run build"

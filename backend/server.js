@@ -4,12 +4,13 @@ import cors from "cors"
 import dotenv from "dotenv"
 import mongoose from "mongoose"
 import professorRoute from "./routes/professor.js"
+import {DATABASE_URL} from "./env.js"
 
 const __dirname=path.resolve()
 
 dotenv.config({path:__dirname+"/.env"});
 const app=express()
-const url=process.env.DATABASE_URL
+const url=DATABASE_URL
 mongoose
     .connect(url,
         { useNewUrlParser: true,
