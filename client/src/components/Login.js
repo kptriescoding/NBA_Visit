@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-import { signInWithGoogle, logout, auth } from "../firebase";
+import { signInWithGoogle, logout, auth} from "../firebase";
 
 import { useAuthState } from "react-firebase-hooks/auth";
 import GoogleButton from "react-google-button";
