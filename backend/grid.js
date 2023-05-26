@@ -66,7 +66,7 @@ const removeFile=async(id)=>{
         //  gfs.unlink(id)  
 }
 
-export {uploadFile,getFile,removeDirectory,removeFile}
+export {uploadFile,getFile,removeFile}
 
 // const readStream=createReadStream(".gitignore")
 

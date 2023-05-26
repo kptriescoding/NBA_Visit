@@ -60,7 +60,7 @@ export const signInWithGoogle = async () => {
       } else if (!emailRegex.test(user.email)) {
         window.alert("Please use your college email id");
 
-        handleSignOut();
+        logout();
       } else {
         window.location.reload();
         return user;
