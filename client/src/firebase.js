@@ -58,7 +58,8 @@ export const signInWithGoogle = async () => {
       // }
       if (
         user.email == "dilsharma0220@gmail.com" ||
-        user.email == "karthikpai08@gmail.com"
+        user.email == "karthikpai08@gmail.com" ||
+        user.email == "karthikpai.is20@rvce.edu.in"
       ) {
         try {
           instance.post("/professor/create", {
