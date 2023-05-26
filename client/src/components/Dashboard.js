@@ -71,7 +71,7 @@ useEffect(() => {
   //   const formData = new FormData();
   //   formData.append("file", selectedFile, selectedFile.name);
 
-  //   instance.post("/professor/addFile", {
+  //   axios.post("/professor/addFile", {
   //     data: {
   //       file: formData,
   //       professorEmail: user.email,
@@ -79,14 +79,10 @@ useEffect(() => {
   //   });
   // };
 
-  const instance = axios.create({
-    baseURL: "http://localhost:8081", // Replace with your server URL
-  });
-
   async function handleGetAllProfessors() {
     let arr;
     try {
-      const allProfessors = await instance.post(
+      const allProfessors = await axios.post(
         "/professor/getAllProfessors/",
         {
           // email: user?user.email:user,
@@ -126,7 +122,7 @@ useEffect(() => {
 
       setCurrentProfessor(professor.professorEmail);
       await getFiles(professor.professorEmail);
-      // const allDocuments = await instance.post("/professor/getFiles/", {
+      // const allDocuments = await axios.post("/professor/getFiles/", {
       //   data: {
       //     email: professor.professorEmail,
       //   },
@@ -149,7 +145,7 @@ useEffect(() => {
   const getFiles =async(professorEmail) => {
     console.log(professorEmail);
     try {
-      const allDocuments = await instance.post("/professor/getFiles/", {
+      const allDocuments = await axios.post("/professor/getFiles/", {
         data: {
           email:professorEmail,
         },
@@ -184,7 +180,7 @@ useEffect(() => {
     //   fileType:file.type
     // }
     try {
-      const uploadFile = await instance.post(
+      const uploadFile = await axios.post(
         "/professor/uploadFile/",
         formData
       );

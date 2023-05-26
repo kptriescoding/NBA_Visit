@@ -13,6 +13,8 @@ router.post("/create", async (req, res) => {
   try {
     // console.log(req.body);
     const { name, email } = req.body.data;
+    console.log("here"
+    )
     // Create if not exists
     var professor = await ProfessorFiles.findOne({ professorEmail: email });
     if (professor) {
@@ -88,7 +90,7 @@ router.post("/getFiles", async (req, res) => {
   }
 });
 router.post("/getAllProfessors", async (req, res) => {
-    
+
   try {
     const professors = await ProfessorFiles.find({});
     if (professors) {

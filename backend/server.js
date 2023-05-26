@@ -44,8 +44,8 @@ app.get("/file", async (req, res) => {
 });
 
 const PORT = process.env.PORT || 8081;
-// app.get("*",(req,res)=>{
-//     res.sendFile(path.join(__dirname, "client","build","index.html"))
-// })
+app.get("*",(req,res)=>{
+    res.sendFile(path.join(__dirname, "client","build","index.html"))
+})
 
 app.listen(PORT, console.log(`Server started on port ${PORT}`));
