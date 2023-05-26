@@ -32,6 +32,10 @@ export default function Dashboard() {
     "ppt",
   ];
 
+  const instance = axios.create({
+    baseURL: "http://localhost:8081", // Replace with your server URL
+  });
+
   // useEffect(() => {
   //   // console.log(user);
   //   // if (!user) {
@@ -71,7 +75,7 @@ export default function Dashboard() {
   //   const formData = new FormData();
   //   formData.append("file", selectedFile, selectedFile.name);
 
-  //   axios.post("/professor/addFile", {
+  //   instance.post("/professor/addFile", {
   //     data: {
   //       file: formData,
   //       professorEmail: user.email,
@@ -82,7 +86,7 @@ export default function Dashboard() {
   async function handleGetAllProfessors() {
     let arr;
     try {
-      const allProfessors = await axios.post(
+      const allProfessors = await instance.post(
         "/professor/getAllProfessors/",
         {
           // email: user?user.email:user,
@@ -122,7 +126,7 @@ export default function Dashboard() {
 
       setCurrentProfessor(professor.professorEmail);
       await getFiles(professor.professorEmail);
-      // const allDocuments = await axios.post("/professor/getFiles/", {
+      // const allDocuments = await instance.post("/professor/getFiles/", {
       //   data: {
       //     email: professor.professorEmail,
       //   },
@@ -145,7 +149,7 @@ export default function Dashboard() {
   const getFiles = async (professorEmail) => {
     console.log(professorEmail);
     try {
-      const allDocuments = await axios.post("/professor/getFiles/", {
+      const allDocuments = await instance.post("/professor/getFiles/", {
         data: {
           email: professorEmail,
         },
@@ -177,7 +181,7 @@ export default function Dashboard() {
     //   fileType:file.type
     // }
     try {
-      const uploadFile = await axios.post(
+      const uploadFile = await instance.post(
         "/professor/uploadFile/",
         formData
       );

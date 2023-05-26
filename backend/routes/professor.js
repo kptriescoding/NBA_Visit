@@ -136,6 +136,10 @@ router.post("/deleteFile", async (req, res) => {
         return res.status(500).json(err);
     }
 });
+
+router.post("/deleteProfessor", async (req, res) => {   
+    return res.status(200).json({message:"Professor deleted successfully"})
+});
         
 
 

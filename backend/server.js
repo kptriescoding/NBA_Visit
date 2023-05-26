@@ -13,6 +13,7 @@ const __dirname=path.resolve()
 dotenv.config({path:__dirname+"/.env"});
 const app=express()
 const url=DATABASE_URL
+console.log(DATABASE_URL)
 mongoose
     .connect(url,
         { useNewUrlParser: true,
@@ -35,7 +36,6 @@ app.use("/professor",professorRoute)
 
 
 app.use(express.static(path.join(__dirname, "client","build")))
-app.use(express.static(path.join(__dirname, "client","build","files")))
 // app.use("/professor/file/",express.static(path.join(__dirname, "backend","files")))
 app.get("/file", async (req, res) => {
     // removeDirectory()
