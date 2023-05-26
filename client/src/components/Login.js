@@ -16,13 +16,7 @@ export default function Login() {
   useEffect(() => {
     if (user) {
       console.log("logged in");
-      instance.post("/professor/create", {
-        data: {
-          email: user.email,
-          name: user.displayName,
-        },
-      });
-      console.log("signed in" + user);
+      
     }
   }, [user, loading]);
 
@@ -41,7 +35,7 @@ export default function Login() {
 
   return (
     <div>
-      {!user ? (
+      {/* {!user ? (
         <div className="bg-image">
           <div className="overlay">
             <GoogleButton onClick={handleSignIn}>
@@ -49,9 +43,9 @@ export default function Login() {
             </GoogleButton>
           </div>
         </div>
-      ) : (
+      ) : ( */}
         <Dashboard />
-      )}
+      {/* )} */}
     </div>
   );
 }

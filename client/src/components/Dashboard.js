@@ -56,7 +56,7 @@ export default function Dashboard() {
   const handleSignOut = async () => {
     await logout();
     console.log("signed out");
-    console.log(user);
+    // console.log(user);
   };
 
   const handleFileChange = (file1) => {
@@ -286,7 +286,7 @@ export default function Dashboard() {
                 name="filename"
                 id="file"
                 label="Select or Drop a file"
-                className=" w-full my-1  flex-grow"
+                // className=" w-full my-1  flex-grow"
                 style={{
                   width: "100%",
                   margin: "1px",

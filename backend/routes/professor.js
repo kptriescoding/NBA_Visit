@@ -15,7 +15,7 @@ router.post("/create", async (req, res) => {
     const { name, email } = req.body.data;
     console.log("here"
     )
-    // Create if not exists
+    // Create if  not exists
     var professor = await ProfessorFiles.findOne({ professorEmail: email });
     if (professor) {
       return res.status(200).json({ message: "Professor already exists" });

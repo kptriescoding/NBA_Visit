@@ -8,6 +8,7 @@ import {
   signOut,
   EmailAuthProvider,
 } from "firebase/auth";
+import axios from "axios";
 import {
   addDoc,
   collection,
@@ -34,7 +35,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-const emailRegex = /^((?!\.[a-z]{2}[0-9]{2})[a-zA-Z0-9_.+-]+)@rvce\.edu\.in$/;
+const emailRegex = /[a-z]*@rvce\.edu\.in$/;
+const emailRegex2 = /[a-z]*\.[a-z][a-z][0-9][0-9]@rvce\.edu\.in$/;
+const instance = axios.create({
+  baseURL: "http://localhost:8081", // Replace with your server URL
+});
 
 const googleProvider = new GoogleAuthProvider();
 export const signInWithGoogle = async () => {
@@ -55,13 +60,31 @@ export const signInWithGoogle = async () => {
         user.email == "dilsharma0220@gmail.com" ||
         user.email == "karthikpai08@gmail.com"
       ) {
+        try {
+          instance.post("/professor/create", {
+            data: {
+              email: user.email,
+              name: user.displayName,
+            },
+          });
+        } catch (err) {
+          console.log("signed in" + user);
+        }
         window.location.reload();
         return user;
-      } else if (!emailRegex.test(user.email)) {
+      } else if (!emailRegex.test(user.email) || emailRegex2.test(user.email)) {
         window.alert("Please use your college email id");
 
         logout();
       } else {
+        try {
+          instance.post("/professor/create", {
+            data: {
+              email: user.email,
+              name: user.displayName,
+            },
+          });
+        } catch (err) {}
         window.location.reload();
         return user;
       }
