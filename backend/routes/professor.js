@@ -73,7 +73,8 @@ router.post("/getFiles", async (req, res) => {
         
         reqFile ={
             fileName: professor.files[i].fileName,
-            url:("http://localhost:8081/file?fileName="+fileLoc)
+            url:"http://localhost:8081/file?fileName="+fileLoc,
+            fileId: professor.files[i].fileId,
         }
        
         reqFiles.push(reqFile);
@@ -110,6 +111,30 @@ router.post("/getAllProfessors", async (req, res) => {
     return res.status(500).json(err);
   }
 });
+
+router.post("/deleteFile", async (req, res) => {
+    try {
+        const {fileId,email}=req.body.data
+        const professor = await ProfessorFiles.findOne({ professorEmail: email });
+        if (professor) {
+            let fileIndex=professor.files.findIndex((file)=>file.fileId===fileId)
+            if(fileIndex===-1){
+                return res.status(404).json({ error: "File not found" });
+            }
+            let file=professor.files[fileIndex]
+            professor.files.splice(fileIndex,1)
+            await removeFile(file.fileId)
+            await professor.save()
+        } else {
+            return res.status(404).json({ error: "Professor not found" });
+        }
+        return res.status(200).json({message:"File deleted successfully"})
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json(err);
+    }
+});
+        
 
 
 
