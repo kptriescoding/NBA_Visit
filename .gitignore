@@ -4,7 +4,7 @@
 /node_modules
 /client/node_modules
 /backend/node_modules
-/backend/upload
+/backend/uploads
 /.pnp
 .pnp.js
 
