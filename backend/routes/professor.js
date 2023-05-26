@@ -3,8 +3,9 @@ import ProfessorFiles from "../models/ProfessorFiles.js";
 import mongoose from "mongoose";
 import { uploadFile, getFile, removeDirectory } from "../grid.js";
 import multer from "multer";
-
+import path from "path"
 const upload = multer({ dest: "backend/uploads/" });
+const __dirname=path.resolve()
 
 const router = Router();
 
@@ -57,6 +58,7 @@ router.post("/uploadFile", upload.single("myFile"), async (req, res) => {
 });
 
 router.post("/getFiles", async (req, res) => {
+    
   try {
     removeDirectory();
     const  email  = req.body.data.email;
@@ -65,8 +67,13 @@ router.post("/getFiles", async (req, res) => {
     if (professor) {
       let reqFiles = [];
       let reqFile;
+      let fileLoc
       for (let i = 0; i < professor.files.length; i++) {
-        reqFile = await getFile(professor.files[i].fileId);
+        fileLoc=await getFile(professor.files[i].fileId)
+        reqFile ={
+            fileName: professor.files[i].fileName,
+            url:"http://localhost:8081/file?fileName="+fileLoc
+        }
         reqFiles.push(reqFile);
       }
     
@@ -100,5 +107,8 @@ router.post("/getAllProfessors", async (req, res) => {
     return res.status(500).json(err);
   }
 });
+
+
+
 
 export default router;

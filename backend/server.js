@@ -5,6 +5,7 @@ import dotenv from "dotenv"
 import mongoose from "mongoose"
 import professorRoute from "./routes/professor.js"
 import {DATABASE_URL} from "./env.js"
+import { getFile ,removeDirectory} from "./grid.js"
 
 
 const __dirname=path.resolve()
@@ -34,7 +35,13 @@ app.use("/professor",professorRoute)
 
 
 app.use(express.static(path.join(__dirname, "client","build")))
-
+app.use(express.static(path.join(__dirname, "client","build","files")))
+// app.use("/professor/file/",express.static(path.join(__dirname, "backend","files")))
+app.get("/file", async (req, res) => {
+    // removeDirectory()
+    let fileName=req.query.fileName
+    res.sendFile(path.join(__dirname,"client","build","files",fileName))
+});
 
 const PORT = process.env.PORT || 8081;
 // app.get("*",(req,res)=>{

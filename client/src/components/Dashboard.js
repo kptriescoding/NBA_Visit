@@ -146,13 +146,16 @@ useEffect(() => {
     // });
   }
 
-  const getFiles = async (professorEmail) => {
+  const getFiles =async(professorEmail) => {
+    console.log(professorEmail);
     try {
       const allDocuments = await instance.post("/professor/getFiles/", {
         data: {
           email:professorEmail,
         },
       });
+      console.log(allDocuments.data.files);
+
       // console.log(allDocuments.data.files);
 
         // let  arr = allDocuments.data.files;
@@ -230,12 +233,12 @@ useEffect(() => {
           {professors &&
             professors.map((professor) => {
               return (
-                <div
+                <button
                   className="card  py-2 focus:bg-blue-200 border-b-2"
                   onClickCapture={(event)=>handleProfessorChanged(event,professor)}
                 >
                   {professor.professorName}
-                </div>
+                </button>
               );
             })}
         </div>
@@ -307,6 +310,7 @@ useEffect(() => {
           </div>
         </div>
       </div>
+      <image src="http://localhost:8081/file?fileId=6470e5b1993c559824688fad"></image>
     </div>
   );
 }

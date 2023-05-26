@@ -1,8 +1,10 @@
 import {createModel} from "mongoose-gridfs"
 import mongoose from "mongoose"
 import { DATABASE_URL } from "./env.js";
-import {createReadStream,createWriteStream} from "fs"
+import  {createReadStream,createWriteStream} from "fs"
 import fs from "fs"
+import { resolve } from "path";
+const __dirname=resolve()
 
 const url=DATABASE_URL
 await mongoose
@@ -32,46 +34,25 @@ const uploadFile=async(file)=>{
 const getFile=async(id)=>{
     let file=await gfs.findById(id)
 
-    const readStream=file.read()
+    const readStream=await file.read()
 
-    if(!process.env.PORT){
-    // CReate a directory if not exists
-    if (!fs.existsSync("client/public/files")){
-        fs.mkdirSync("client/public/files");
-    }
-    const writeStream=createWriteStream("client/public/files/"+id+file.filename)
-    readStream.pipe(writeStream)
-    }
-    else{
-        if (!fs.existsSync("client/build/files")){
-            fs.mkdirSync("client/build/files");
-        }
-        const writeStream=createWriteStream("client/build/files/"+id+file.filename)
-    readStream.pipe(writeStream)
-    }
-    // console.log(buffer)
+    var fileName=id+file.filename
+    const writeStream=createWriteStream("client/build/files/"+fileName)
+    await readStream.pipe(writeStream)
 
-    // const fileUrl="client"
-    const resFile={
-        url:"/files/"+id+file.filename,
-        fileName:file.filename,
-    }
-    return resFile
+
+    return fileName
 }
 const removeDirectory=()=>{
-    if(!process.env.PORT){
-        // CReate a directory if not exists
-        if (fs.existsSync("client/public/files")){
-            fs.rmSync("client/public/files",{ recursive: true, force: true });
+        if (fs.existsSync("backend/uploads")){
+            fs.rmSync("backend/uploads",{ recursive: true, force: true });
         }
-        }
-        else{
-            if (fs.existsSync("client/build/files")){
+        if (fs.existsSync("client/build/files")){
                 fs.rmSync("client/build/files",{ recursive: true, force: true });
             }
-        }
-        fs.rmSync("backend/uploads",{ recursive: true, force: true });
+        
         fs.mkdirSync("backend/uploads");
+        fs.mkdirSync("client/build/files");
 }
 
 export {uploadFile,getFile,removeDirectory}
