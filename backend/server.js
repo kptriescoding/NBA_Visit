@@ -6,6 +6,7 @@ import mongoose from "mongoose"
 import professorRoute from "./routes/professor.js"
 import {DATABASE_URL} from "./env.js"
 
+
 const __dirname=path.resolve()
 
 dotenv.config({path:__dirname+"/.env"});
@@ -19,14 +20,16 @@ mongoose
     .then(() => console.log("Database Connected Successfully"))
     .catch(err => console.log(err));
 
+
+
 const corsOptions ={
    origin:'*', 
    credentials:true,            //access-control-allow-credentials:true
    optionSuccessStatus:200,
 }
 app.use(cors(corsOptions))
-app.use(express.json())
-app.use(express.urlencoded({extended:true}))
+app.use(express.json({limit: '100mb'}));
+app.use(express.urlencoded({limit: '100mb',extended:true}));
 app.use("/professor",professorRoute)
 
 

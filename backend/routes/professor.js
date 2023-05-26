@@ -1,6 +1,13 @@
 import { Router } from "express"
 import ProfessorFiles from "../models/ProfessorFiles.js"
+import mongoose from "mongoose"
+import {uploadFile,getFile} from "../grid.js"
+import multer from "multer"
+
+const upload=multer({dest:'backend/uploads/'})
+
 const router=Router()
+
 
 router.post("/create",async(req,res)=>{
     try{
@@ -23,19 +30,22 @@ router.post("/create",async(req,res)=>{
     }
 }
 )
-router.post("/addFile",async(req,res)=>{ 
+router.post("/uploadFile",upload.single("myFile"),async(req,res)=>{ 
     try{
-        // const {name,email,fileName,fileData}=req.body.data
+        const file=req.file
+
+        const {email}=req.body
         // Access multipart form data
+        // console.log("Here")
+        // console.log(file)
         
-        console.log(req);
-        console.log(req.body)
-        console.log(email)
         const professor=await ProfessorFiles.findOne({professorEmail:email})
         if(professor){
+            let {id}=await uploadFile(file)
+            // console.log(id)
             professor.files.push({
-                fileName:fileName,
-                data:fileData
+                fileName:file.originalname,
+                fileId:id
             })
             await professor.save()
             return res.json(professor)
@@ -51,10 +61,15 @@ router.post("/addFile",async(req,res)=>{
 
 router.post("/getFiles",async(req,res)=>{
     try{
-        const {email}=req.body
+        const {email}=req.body.data
         const professor=await ProfessorFiles.findOne({professorEmail:email})
         if(professor){
-            return res.json(professor)
+            professor.reqFiles=[]
+            let reqFile
+           professor.files.forEach(async (file,index)=>{
+                res=await getFile(file.fileId,res)
+            })
+            return res.status(200).json(professor)
         }
         else{
             return res.status(404).json({error:"Professor not found"})
@@ -68,7 +83,14 @@ router.post("/getAllProfessors",async(req,res)=>{
     try{
         const professors=await ProfessorFiles.find({})
         if(professors){
-            return res.json(professors)
+
+            var resProf=[]
+            professors.forEach(prof=>{
+                resProf.push({
+                professorName:prof.professorName,
+                    professorEmail:prof.professorEmail
+                })})
+            return res.json(resProf)
         }
         else{
             return res.status(404).json({error:"No professors found"})

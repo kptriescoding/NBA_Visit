@@ -50,18 +50,42 @@ export default function Dashboard() {
   async function handleProfessorChanged() {
     let arr;
     try {
-      const allDocuments = await instance.post("/professor/getFiles/", {
+      const allDocuments = await instance.post("/professor/getFiles", {
         data: {
-          email: currentProfessor.email,
+          email: user.email
         },
       });
-      arr = allDocuments.data.files;
+
+      console.log(allDocuments);
+
     } catch (err) {
       console.log(err);
     }
     setDocuments(() => {
       return arr;
     });
+  }
+  const uploadFile=async()=>{
+    var file = document.getElementById("myFile").files[0];
+    var formData = new FormData();
+    formData.append("myFile", file);
+    formData.append("email",user.email);
+      // ArrayBuffer to blob
+      // fileData=new Blob([new Uint8Array(fileData)],{type:file.type});
+      // let data={
+      //   email:user.email,
+      //   fileName:file.name,
+      //   fileStream:fileData,
+      //   fileType:file.type
+      // }
+      try{
+        const uploadFile=await instance.post("/professor/uploadFile/",formData)
+        console.log(uploadFile);
+      }
+      catch(err){
+        console.log(err);
+      }
+    
   }
 
   return (
@@ -91,7 +115,7 @@ export default function Dashboard() {
               className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-white rounded-box w-52"
             >
               <li>
-                <a>Logout</a>
+                <a onClickCa={()=>logout()}>Logout</a>
               </li>
             </ul>
           </div>
@@ -128,6 +152,8 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+      <input type="file" id="myFile" name="filename"/>
+  <input type="submit" onClickCapture={uploadFile}></input>
     </div>
   );
 }

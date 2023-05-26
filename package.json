@@ -4,6 +4,10 @@
     "server": "nodemon backend/server.js",
     "client": "npm --prefix client/ start",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "grid": "nodemon backend/grid.js",
     "heroku-postbuild": "npm install --only=dev && cd backend && npm install --only=dev && cd ../client && npm install --only=dev && npm install && npm run build"
+  },
+  "dependencies": {
+    "multer": "^1.4.5-lts.1"
   }
 }
