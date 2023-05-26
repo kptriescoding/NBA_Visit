@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
 import { logout } from "../firebase";
+import { doc } from "firebase/firestore";
 
 export default function Dashboard() {
   const [user, loading, error] = useAuthState(auth);
@@ -56,14 +57,20 @@ export default function Dashboard() {
         },
       });
 
-      console.log(allDocuments);
+      console.log(allDocuments.data.files);
+      arr = allDocuments.data.files[0];
+      let url=window.location.origin+arr.url
+      // USe this url to access the file
+      console.log(url);
+
+
 
     } catch (err) {
       console.log(err);
     }
-    setDocuments(() => {
-      return arr;
-    });
+    // setDocuments(() => {
+    //   // return arr;
+    // });
   }
   const uploadFile=async()=>{
     var file = document.getElementById("myFile").files[0];
@@ -95,6 +102,7 @@ export default function Dashboard() {
           <a className="btn btn-ghost normal-case text-xl">
             RV College Of Engineering
           </a>
+          
         </div>
         <div className="flex-none gap-2">
           {/* <div className="form-control">

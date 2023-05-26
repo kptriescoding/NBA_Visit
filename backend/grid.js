@@ -37,11 +37,15 @@ const getFile=async(id,res)=>{
     // Convert file to buffer and send it to frontend
     console.log(file.contentType)
     const readStream=await file.read()
-    // Append file to res
-    res.append('Content-Type', file.contentType);
-    res.append('Content-Disposition', 'attachment; filename="' + file.filename + '"');
 
-    readStream.pipe(res)
+    // Convert readStream to blob
+    const chunks = [];   
+    for await (const chunk of readStream) {
+        chunks.push(chunk);
+    }
+    print(chunks)
+    const buffer = Buffer.concat(chunks);
+    console.log(buffer)
     return res
 }
 
