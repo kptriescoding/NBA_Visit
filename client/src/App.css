@@ -37,7 +37,20 @@
   }
 }
 
+.bg-image {
+  background-image: url('../public/ISE1.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+}
 
+.overlay {
+  background-color: rgba(0, 0, 0, 0.6); /* Blackish tint */
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 /* .pg-viewer-wrapper {
   overflow-y: unset !important;
 }

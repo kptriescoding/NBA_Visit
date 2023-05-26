@@ -41,11 +41,17 @@ export default function Login() {
 
   return (
     <div>
-      {/* {!user ? (
-        <GoogleButton onClick={handleSignIn}>Sign In with Google</GoogleButton>
-      ) : ( */}
+      {!user ? (
+        <div className="bg-image">
+          <div className="overlay">
+            <GoogleButton onClick={handleSignIn}>
+              Sign In with Google
+            </GoogleButton>
+          </div>
+        </div>
+      ) : (
         <Dashboard />
-      {/* // )} */}
+      )}
     </div>
   );
 }
