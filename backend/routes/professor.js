@@ -74,7 +74,7 @@ router.post("/getFiles", async (req, res) => {
         
         reqFile ={
             fileName: professor.files[i].fileName,
-            url:"http://localhost:8081/file?fileName="+fileLoc,
+            url:"https://nba-visit.onrender.com//file?fileName="+fileLoc,
             fileId: professor.files[i].fileId,
         }
        
