@@ -33,7 +33,8 @@ export default function Dashboard() {
   ];
 
   const instance = axios.create({
-    baseURL: window.location.origin, // Replace with your server URL
+    // baseURL: window.location.origin, // Replace with your server URL
+    baseURL: "http://localhost:8082",
   });
 
   // useEffect(() => {
@@ -300,7 +301,7 @@ export default function Dashboard() {
                 name="filename"
                 id="file"
                 label="Select or Drop a file"
-                className=" w-full my-1  flex-grow"
+                className=" w-full my-1  flex-grow someClass"
                 style={{
                   minWidth: "100%",
                   margin: "1px",
