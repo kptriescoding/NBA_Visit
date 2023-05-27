@@ -51,6 +51,7 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
+    if(currentProfessor)
     getFiles(currentProfessor);
   }, [currentProfessor]);
   const handleSignOut = async () => {
@@ -104,6 +105,7 @@ export default function Dashboard() {
     setProfessors(() => {
       return arr;
     });
+    if(arr)setCurrentProfessor(arr[0].professorEmail);
   }
 
   const fileOptions = {
