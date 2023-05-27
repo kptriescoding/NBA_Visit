@@ -45,18 +45,6 @@ app.get("/testHtml", async (req, res) => {
   res.sendFile(path.join(__dirname, "client", "build", "test.html"));
 });
 
-app.get("/testDocx", async (req, res) => {
-  res.sendFile(path.join(__dirname, "backend", "FFE Donor Letter.docx"));
-});
-
-app.get("/testPPt", async (req, res) => {
-  res.sendFile(path.join(__dirname, "backend", "Bhopal Gas Tragedy.pptx"));
-});
-
-app.get("/testxl", async (req, res) => {
-  res.sendFile(path.join(__dirname, "backend", "08.04.2023M.xlsx"));
-});
-
 
 const PORT = process.env.PORT || 8082;
 app.get("*", (req, res) => {
