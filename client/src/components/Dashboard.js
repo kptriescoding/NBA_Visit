@@ -7,7 +7,7 @@ import { logout, signInWithGoogle } from "../firebase";
 import FileViewer from "react-file-viewer";
 import { doc } from "firebase/firestore";
 import { FileUploader } from "react-drag-drop-files";
-
+import "./custom.css"
 export default function Dashboard() {
   const [user, loading, error] = useAuthState(auth);
   const [fileData, setFileData] = useState(null);
@@ -45,6 +45,9 @@ export default function Dashboard() {
   //   // console.log(documents);
 
   // }, [user]);
+  useEffect(() => {
+
+  }, [user]);
 
   useEffect(() => {
     handleGetAllProfessors();
@@ -211,7 +214,7 @@ export default function Dashboard() {
 
   return (
     <div className=" w-full bg-primary-bg h-screen flex flex-col gap-4 ">
-      <div className="navbar bg-primaryfocus-bg border-b-2 border-x-blue-950 relative">
+      <div className="flex justify-evenly bg-primaryfocus-bg border-b-2 border-x-blue-950 relative">
         <img
           src="download-removebg-preview.png"
           alt="RV Logo"
@@ -223,13 +226,13 @@ export default function Dashboard() {
           </a>
         </div>
         <div className="flex-none gap-2  ">
-          <div className="form-control ">
+          {/* <div className="form-control ">
             <input
               type="text"
               placeholder="Search"
               className="input input-bordered bg-primary-bg "
             />
-          </div>
+          </div> */}
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
@@ -239,7 +242,7 @@ export default function Dashboard() {
                       ? user.photoURL
                       : "https://st3.depositphotos.com/1767687/17621/v/600/depositphotos_176214104-stock-illustration-default-avatar-profile-icon.jpg"
                   }
-                  alt=""
+                  alt="Profile"
                 />
               </div>
             </label>
@@ -259,8 +262,8 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="flex justify-between self-center  w-4/5 ">
-        <div className="w-1/5 mt-1">
+      <div className="flex flex-col lg:flex-row justify-between self-center  w-4/5 ">
+        <div className=" w-full lg:w-1/5 mt-1">
           <h1 className=" text-xl border-2 border-gray-400 py-2 text-white bg-gray-600 ">
             Professors
           </h1>
@@ -280,8 +283,8 @@ export default function Dashboard() {
         </div>
         {/* documents section */}
         <div className=" border-2 shadow-lg  flex-grow rounded-xl border-gray-300">
-          {user && (
-            <div className=" flex justify-end bg-orange-50 rounded-t  border-b-2 ">
+          {user && (user.email===currentProfessor) && (
+            <div className=" flex flex-col  lg:flex-row lg:w-full justify-center bg-orange-50 rounded-t  border-b-2 ">
               {/* Upload Option */}
               {/* <input
               type="file"
@@ -289,21 +292,22 @@ export default function Dashboard() {
               id="myFile"
               name="filename"
             /> */}
+            <div className=" flex justify-center items-stretch w-full">
               <FileUploader
                 handleChange={handleFileChange}
                 name="filename"
                 id="file"
                 label="Select or Drop a file"
-                // className=" w-full my-1  flex-grow"
+                className=" w-full my-1  flex-grow"
                 style={{
-                  width: "100%",
+                  minWidth: "100%",
                   margin: "1px",
                 }}
                 types={fileTypes}
               />
-
+</div>
               <button
-                className=" flex justify-center items-center py-2.5 pr-8 pl-8 rounded-e-lg  bg-red-50 hover:bg-orange-100 text-black"
+                className=" flex justify-center  w-full items-center py-2.5 pr-8 pl-8 rounded-e-lg  bg-red-50 hover:bg-orange-100 text-black"
                 onClickCapture={uploadFile}
               >
                 {/* <span>Upload File</span>  */}
@@ -314,9 +318,11 @@ export default function Dashboard() {
               </button>
             </div>
           )}
-          {!user && (
+          {(!user || user.email!=currentProfessor )&& (
             <div className=" w-full ">
-              <p className=" text-gray-600 text-xl py-1 border-b-2 bg-orange-100">All Files</p>
+              <p className=" text-gray-600 text-xl py-1 border-b-2 bg-orange-100">
+                All Files
+              </p>
             </div>
           )}
           <div>

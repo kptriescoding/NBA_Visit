@@ -44,6 +44,7 @@
   height: 100vh;
 }
 
+
 .overlay {
   background-color: rgba(0, 0, 0, 0.6); /* Blackish tint */
   height: 100vh;
@@ -63,4 +64,12 @@
 .photo-viewer-container > img {
   width: unset !important;
   height: unset !important;
+} */
+/* 
+.sc-aXZVg{
+  min-width: 0px;
+}
+.guZdik{
+  min-width: 0px;
+
 } */
