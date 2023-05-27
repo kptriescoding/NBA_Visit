@@ -33,8 +33,8 @@ export default function Dashboard() {
   ];
 
   const instance = axios.create({
-    // baseURL: window.location.origin, // Replace with your server URL
-    baseURL: "http://localhost:8082",
+    baseURL: window.location.origin, // Replace with your server URL
+    // baseURL: "http://localhost:8082",
   });
 
   // useEffect(() => {
