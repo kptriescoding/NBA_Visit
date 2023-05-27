@@ -38,7 +38,7 @@ export const db = getFirestore(app);
 const emailRegex = /[a-z]*@rvce\.edu\.in$/;
 const emailRegex2 = /[a-z]*\.[a-z][a-z][0-9][0-9]@rvce\.edu\.in$/;
 const instance = axios.create({
-  baseURL: "http://localhost:8081", // Replace with your server URL
+  baseURL: window.location.origin, // Replace with your server URL
 });
 
 const googleProvider = new GoogleAuthProvider();

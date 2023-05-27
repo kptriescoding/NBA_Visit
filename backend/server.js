@@ -41,7 +41,7 @@ app.get("/file", async (req, res) => {
   res.sendFile(path.join("/tmp", "files", fileName));
 });
 
-const PORT = process.env.PORT || 8081;
+const PORT = process.env.PORT || 8082;
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });

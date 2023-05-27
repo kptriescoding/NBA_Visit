@@ -33,7 +33,7 @@ export default function Dashboard() {
   ];
 
   const instance = axios.create({
-    baseURL: "http://localhost:8081", // Replace with your server URL
+    baseURL: window.location.origin, // Replace with your server URL
   });
 
   // useEffect(() => {
@@ -54,6 +54,7 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
+    if(currentProfessor)
     getFiles(currentProfessor);
   }, [currentProfessor]);
   const handleSignOut = async () => {
@@ -107,6 +108,7 @@ export default function Dashboard() {
     setProfessors(() => {
       return arr;
     });
+    if(arr)setCurrentProfessor(arr[0].professorEmail);
   }
 
   const fileOptions = {
@@ -339,7 +341,6 @@ export default function Dashboard() {
                         href={document.url}
                         className=" p-1 px-1.5 rounded-full hover:bg-red-100 mx-2"
                         download={document.fileName}
-                        target="__blank"
                       >
                         <span className="material-symbols-outlined">
                           download

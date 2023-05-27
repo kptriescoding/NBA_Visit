@@ -5,6 +5,7 @@
     "client": "npm --prefix client/ start",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "grid": "nodemon backend/grid.js",
+    "build:test":"cd client && npm run build && cd .. && node backend/server.js",
     "deploy":"cd client && npm run build && cd .. && vercel --prod"
   },
   "dependencies": {
