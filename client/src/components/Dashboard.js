@@ -335,7 +335,6 @@ export default function Dashboard() {
                         href={document.url}
                         className=" p-1 px-1.5 rounded-full hover:bg-red-100 mx-2"
                         download={document.fileName}
-                        target="__blank"
                       >
                         <span className="material-symbols-outlined">
                           download
