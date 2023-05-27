@@ -10,7 +10,7 @@ export default function Login() {
   const [user, loading, error] = useAuthState(auth);
 
   const instance = axios.create({
-    baseURL: "http://localhost:8081", // Replace with your server URL
+    baseURL: window.location.origin, // Replace with your server URL
   });
 
   useEffect(() => {
